@@ -39,7 +39,7 @@ func main() {
 	}
 
 	for _, v := range avids {
-		cid, e := getFromWeb(v)
+		cid, e := GetFromWeb(v)
 		if e != nil {
 			fmt.Println(e)
 		} else {
@@ -48,7 +48,7 @@ func main() {
 	}
 }
 
-func getFromWeb(avid int32) (int32, error) {
+func GetFromWeb(avid int32) (int32, error) {
 	url := fmt.Sprintf(videoUrl, avid)
 	r, e := http.Get(url)
 	if e != nil {
