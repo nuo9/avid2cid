@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"log"
 )
 
 const (
@@ -24,16 +25,14 @@ var (
 func main() {
 	argLen := len(os.Args)
 	if argLen < 1 {
-		fmt.Printf(usageInfo)
-		return
+		log.Fatal(usageInfo)
 	}
 
 	avids := make([]int32, 0, argLen)
 	for _, v := range os.Args {
 		iv, e := strconv.Atoi(v)
 		if e != nil || int32(iv) <= 0 {
-			fmt.Printf(usageInfo)
-			return
+			log.Fatal(usageInfo)
 		}
 		avids = append(avids, int32(iv))
 	}
@@ -41,9 +40,9 @@ func main() {
 	for _, v := range avids {
 		cid, e := GetFromWeb(v)
 		if e != nil {
-			fmt.Println(e)
+			log.Println(e)
 		} else {
-			fmt.Println(cid)
+			log.Println(cid)
 		}
 	}
 }
@@ -74,14 +73,14 @@ func getCidFromHtml(htmlBytes *[]byte) (int32, error) {
 	}
 	i += cidEqualsBytesLength
 
-	bytes := make([]byte, 0, 10)
+	numbers := make([]byte, 0, 10)
 	tempC := (*htmlBytes)[i : i+1][0]
 	for isNumber(tempC) {
-		bytes = append(bytes, tempC)
+		numbers = append(numbers, tempC)
 		i++
 		tempC = (*htmlBytes)[i : i+1][0]
 	}
-	i, e := strconv.Atoi(string(bytes))
+	i, e := strconv.Atoi(string(numbers))
 	if e != nil {
 		return 0, e
 	}
